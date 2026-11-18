@@ -1,0 +1,5 @@
+flow_id,lot_id,parent_id,quantity,split_at
+F1,L1,,100,
+F1A,L1,F1,40,2026-10-16T16:00:00+08:00
+F1B,L1,F1,60,2026-10-16T16:00:00+08:00
+F2,L2,,60,

@@ -1,0 +1,348 @@
+{
+  "title": "药品冷链交接中的温控经历仓",
+  "synthetic": true,
+  "tables": [
+    {
+      "name": "lots",
+      "description": "药品批及数量。",
+      "columns": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "description": "药批",
+          "nullable": true
+        },
+        {
+          "name": "sku",
+          "type": "string",
+          "description": "商品",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "description": "总盒数",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "lot_id"
+      ],
+      "references": [],
+      "path": "data/lots.csv",
+      "row_count": 2,
+      "sha256": "b07ae11ec77ae2c2ac2fd7d66d1072e57b66e578bbc43ea8c424b93e837cf976"
+    },
+    {
+      "name": "flows",
+      "description": "物理支流。",
+      "columns": [
+        {
+          "name": "flow_id",
+          "type": "string",
+          "description": "支流",
+          "nullable": true
+        },
+        {
+          "name": "lot_id",
+          "type": "string",
+          "description": "药批",
+          "nullable": true
+        },
+        {
+          "name": "parent_id",
+          "type": "string",
+          "description": "父流",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "description": "盒数",
+          "nullable": true
+        },
+        {
+          "name": "split_at",
+          "type": "datetime",
+          "description": "拆分时点",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "flow_id"
+      ],
+      "references": [
+        {
+          "column": "lot_id",
+          "target_table": "lots",
+          "target_column": "lot_id"
+        },
+        {
+          "column": "parent_id",
+          "target_table": "flows",
+          "target_column": "flow_id"
+        }
+      ],
+      "path": "data/flows.csv",
+      "row_count": 4,
+      "sha256": "2d6a7356f81e8548d05e3a1c536fd80ec10befc4f0aab679417009b26ababf70"
+    },
+    {
+      "name": "handoffs",
+      "description": "独立收发回执。",
+      "columns": [
+        {
+          "name": "receipt_id",
+          "type": "string",
+          "description": "回执",
+          "nullable": true
+        },
+        {
+          "name": "transfer_id",
+          "type": "string",
+          "description": "交接",
+          "nullable": true
+        },
+        {
+          "name": "flow_id",
+          "type": "string",
+          "description": "支流",
+          "nullable": true
+        },
+        {
+          "name": "side",
+          "type": "string",
+          "description": "sent或received",
+          "nullable": true
+        },
+        {
+          "name": "party",
+          "type": "string",
+          "description": "本方",
+          "nullable": true
+        },
+        {
+          "name": "counterparty",
+          "type": "string",
+          "description": "对方",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "description": "盒数",
+          "nullable": true
+        },
+        {
+          "name": "occurred_at",
+          "type": "datetime",
+          "description": "实际时点",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "receipt_id"
+      ],
+      "references": [
+        {
+          "column": "flow_id",
+          "target_table": "flows",
+          "target_column": "flow_id"
+        }
+      ],
+      "path": "data/handoffs.csv",
+      "row_count": 7,
+      "sha256": "2d65e721aad0345a255b7164c084dc554768290243bc1185a8a53369bb9d6cbc"
+    },
+    {
+      "name": "logger_loads",
+      "description": "装载证据，不代表所有权。",
+      "columns": [
+        {
+          "name": "load_id",
+          "type": "string",
+          "description": "装载",
+          "nullable": true
+        },
+        {
+          "name": "logger_id",
+          "type": "string",
+          "description": "仪器",
+          "nullable": true
+        },
+        {
+          "name": "flow_id",
+          "type": "string",
+          "description": "支流",
+          "nullable": true
+        },
+        {
+          "name": "start",
+          "type": "datetime",
+          "description": "开始",
+          "nullable": true
+        },
+        {
+          "name": "end",
+          "type": "datetime",
+          "description": "结束",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "load_id"
+      ],
+      "references": [
+        {
+          "column": "flow_id",
+          "target_table": "flows",
+          "target_column": "flow_id"
+        }
+      ],
+      "path": "data/logger_loads.csv",
+      "row_count": 5,
+      "sha256": "15b2e1f5a3b3ed62d8fd7b4ca1e0d29649db618cb525891c16b556558f603b1c"
+    },
+    {
+      "name": "readings",
+      "description": "原始测量及覆盖。",
+      "columns": [
+        {
+          "name": "reading_id",
+          "type": "string",
+          "description": "读数",
+          "nullable": true
+        },
+        {
+          "name": "logger_id",
+          "type": "string",
+          "description": "仪器",
+          "nullable": true
+        },
+        {
+          "name": "at",
+          "type": "datetime",
+          "description": "起点",
+          "nullable": true
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "温度",
+          "nullable": true
+        },
+        {
+          "name": "unit",
+          "type": "string",
+          "description": "C或F",
+          "nullable": true
+        },
+        {
+          "name": "coverage_minutes",
+          "type": "integer",
+          "description": "覆盖分钟",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "reading_id"
+      ],
+      "references": [],
+      "path": "data/readings.csv",
+      "row_count": 57,
+      "sha256": "0414ddfe291c7e1284e49a0bcce1fbd8f3ce82d20ef38700aaad9c6a6f75496a"
+    },
+    {
+      "name": "temperature_rules",
+      "description": "内部质量口径，不是药品标准。",
+      "columns": [
+        {
+          "name": "rule_id",
+          "type": "string",
+          "description": "规则",
+          "nullable": true
+        },
+        {
+          "name": "sku",
+          "type": "string",
+          "description": "商品",
+          "nullable": true
+        },
+        {
+          "name": "start",
+          "type": "datetime",
+          "description": "生效",
+          "nullable": true
+        },
+        {
+          "name": "end",
+          "type": "datetime",
+          "description": "失效",
+          "nullable": true
+        },
+        {
+          "name": "lower_c",
+          "type": "number",
+          "description": "下界",
+          "nullable": true
+        },
+        {
+          "name": "upper_c",
+          "type": "number",
+          "description": "上界",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "rule_id"
+      ],
+      "references": [],
+      "path": "data/temperature_rules.csv",
+      "row_count": 2,
+      "sha256": "0b0487cf546df637a9ef8ec4577baf65e28a23d6b6bc64acba18796d51fe1d56"
+    },
+    {
+      "name": "time_corrections",
+      "description": "后续接收的回执补正。",
+      "columns": [
+        {
+          "name": "correction_id",
+          "type": "string",
+          "description": "补正",
+          "nullable": true
+        },
+        {
+          "name": "receipt_id",
+          "type": "string",
+          "description": "目标",
+          "nullable": true
+        },
+        {
+          "name": "new_at",
+          "type": "datetime",
+          "description": "新时点",
+          "nullable": true
+        },
+        {
+          "name": "received_at",
+          "type": "datetime",
+          "description": "补正收到",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "correction_id"
+      ],
+      "references": [
+        {
+          "column": "receipt_id",
+          "target_table": "handoffs",
+          "target_column": "receipt_id"
+        }
+      ],
+      "path": "data/time_corrections.csv",
+      "row_count": 1,
+      "sha256": "bb0b9a9640c7d81f74cc9f0264dc78bf15ce2b8d0026348b0c440a94c37e8903"
+    }
+  ]
+}
