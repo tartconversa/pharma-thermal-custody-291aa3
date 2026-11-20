@@ -10,3 +10,12 @@ coverage/
 __pycache__/
 *.py[cod]
 .DS_Store
+
+# 数据仓运行产物（数据库、内容寻址原始归档、接收资料包）
+warehouse_demo/
+wh_fail/
+warehouse/
+packs/
+*.duckdb
+*.duckdb.wal
+raw_files/

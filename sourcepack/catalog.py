@@ -55,7 +55,11 @@ def inspect(root):
         path = (root / table["path"]).resolve()
         if not path.is_relative_to(root) or not path.is_file():
             raise ValueError("文件路径无效")
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        raw = path.read_bytes()
+        # 资料摘要按 CRLF 登记；不同平台检出可能得到 LF，比对前归一化行尾，
+        # 既兼容行尾差异，仍能发现任何实质字节篡改。
+        normalized = raw.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+        digest = hashlib.sha256(normalized).hexdigest()
         if digest != table["sha256"]:
             raise ValueError("资料摘要不一致：" + table["name"])
         data = read_table(path, table)
